@@ -6,8 +6,7 @@ from dotenv import load_dotenv
 from upstash_vector import Index
 
 # Load environment variables from .env.local
-env_path = os.path.join(os.path.dirname(__file__), '..', '.env.local')
-load_dotenv(env_path)
+load_dotenv('../.env.local')
 
 UPSTASH_URL = os.environ.get("UPSTASH_VECTOR_REST_URL")
 UPSTASH_TOKEN = os.environ.get("UPSTASH_VECTOR_REST_TOKEN")

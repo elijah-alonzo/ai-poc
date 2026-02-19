@@ -1,47 +1,44 @@
-[
-  {
-    "id": "book_001",
-    "title": "1984",
-    "author": "George Orwell",
-    "published_date": "1949-06-08",
-    "genres": ["Dystopian", "Political Fiction", "Science Fiction"],
-    "summary": "A dystopian novel set in a totalitarian society ruled by Big Brother. The story follows Winston Smith, who secretly rebels against a regime that manipulates truth, language, and history to maintain absolute control.",
-    "embedding_text": "Title: 1984. Author: George Orwell. Published: 1949-06-08. Genres: Dystopian, Political Fiction, Science Fiction. Summary: A dystopian novel set in a totalitarian society ruled by Big Brother. The story follows Winston Smith, who secretly rebels against a regime that manipulates truth, language, and history to maintain absolute control."
-  },
-  {
-    "id": "book_002",
-    "title": "To Kill a Mockingbird",
-    "author": "Harper Lee",
-    "published_date": "1960-07-11",
-    "genres": ["Southern Gothic", "Bildungsroman"],
-    "summary": "Set in the American South, the novel explores racial injustice through the eyes of Scout Finch. Her father, Atticus Finch, defends a Black man falsely accused of assault, exposing deep-rooted prejudice in their community.",
-    "embedding_text": "Title: To Kill a Mockingbird. Author: Harper Lee. Published: 1960-07-11. Genres: Southern Gothic, Bildungsroman. Summary: Set in the American South, the novel explores racial injustice through the eyes of Scout Finch. Her father, Atticus Finch, defends a Black man falsely accused of assault, exposing deep-rooted prejudice in their community."
-  },
-  {
-    "id": "book_003",
-    "title": "The Hobbit",
-    "author": "J.R.R. Tolkien",
-    "published_date": "1937-09-21",
-    "genres": ["Fantasy", "Adventure"],
-    "summary": "Bilbo Baggins, a reluctant hobbit, embarks on an unexpected journey with a group of dwarves to reclaim their homeland from the dragon Smaug. Along the way, he discovers courage, wit, and a mysterious ring.",
-    "embedding_text": "Title: The Hobbit. Author: J.R.R. Tolkien. Published: 1937-09-21. Genres: Fantasy, Adventure. Summary: Bilbo Baggins, a reluctant hobbit, embarks on an unexpected journey with a group of dwarves to reclaim their homeland from the dragon Smaug. Along the way, he discovers courage, wit, and a mysterious ring."
-  },
-  {
-    "id": "book_004",
-    "title": "Pride and Prejudice",
-    "author": "Jane Austen",
-    "published_date": "1813-01-28",
-    "genres": ["Romance", "Classic Literature"],
-    "summary": "Elizabeth Bennet navigates issues of class, marriage, and morality in early 19th-century England. Her evolving relationship with the reserved Mr. Darcy challenges her initial judgments and societal expectations.",
-    "embedding_text": "Title: Pride and Prejudice. Author: Jane Austen. Published: 1813-01-28. Genres: Romance, Classic Literature. Summary: Elizabeth Bennet navigates issues of class, marriage, and morality in early 19th-century England. Her evolving relationship with the reserved Mr. Darcy challenges her initial judgments and societal expectations."
-  },
-  {
-    "id": "book_005",
-    "title": "The Great Gatsby",
-    "author": "F. Scott Fitzgerald",
-    "published_date": "1925-04-10",
-    "genres": ["Tragedy", "Historical Fiction"],
-    "summary": "Narrated by Nick Carraway, the novel portrays the mysterious Jay Gatsby and his obsessive love for Daisy Buchanan. Set during the Jazz Age, it critiques wealth, illusion, and the American Dream.",
-    "embedding_text": "Title: The Great Gatsby. Author: F. Scott Fitzgerald. Published: 1925-04-10. Genres: Tragedy, Historical Fiction. Summary: Narrated by Nick Carraway, the novel portrays the mysterious Jay Gatsby and his obsessive love for Daisy Buchanan. Set during the Jazz Age, it critiques wealth, illusion, and the American Dream."
-  }
-]
+{
+  "books": [
+    {
+      "title": "1984",
+      "author": "George Orwell",
+      "published_date": "1949-06-08",
+      "genres": ["Dystopian", "Political Fiction", "Science Fiction"],
+      "summary": "A dystopian novel set in a totalitarian society ruled by Big Brother. The story follows Winston Smith, who secretly rebels against a regime that manipulates truth, language, and history to maintain absolute control.",
+      "embedding_text": "Title: 1984. Author: George Orwell. Published: 1949-06-08. Genres: Dystopian, Political Fiction, Science Fiction. Summary: A dystopian novel set in a totalitarian society ruled by Big Brother. The story follows Winston Smith, who secretly rebels against a regime that manipulates truth, language, and history to maintain absolute control."
+    },
+    {
+      "title": "To Kill a Mockingbird",
+      "author": "Harper Lee",
+      "published_date": "1960-07-11",
+      "genres": ["Southern Gothic", "Bildungsroman"],
+      "summary": "Set in the American South, the novel explores racial injustice through the eyes of Scout Finch. Her father, Atticus Finch, defends a Black man falsely accused of assault, exposing deep-rooted prejudice in their community.",
+      "embedding_text": "Title: To Kill a Mockingbird. Author: Harper Lee. Published: 1960-07-11. Genres: Southern Gothic, Bildungsroman. Summary: Set in the American South, the novel explores racial injustice through the eyes of Scout Finch. Her father, Atticus Finch, defends a Black man falsely accused of assault, exposing deep-rooted prejudice in their community."
+    },
+    {
+      "title": "The Hobbit",
+      "author": "J.R.R. Tolkien",
+      "published_date": "1937-09-21",
+      "genres": ["Fantasy", "Adventure"],
+      "summary": "Bilbo Baggins, a reluctant hobbit, embarks on an unexpected journey with a group of dwarves to reclaim their homeland from the dragon Smaug. Along the way, he discovers courage, wit, and a mysterious ring.",
+      "embedding_text": "Title: The Hobbit. Author: J.R.R. Tolkien. Published: 1937-09-21. Genres: Fantasy, Adventure. Summary: Bilbo Baggins, a reluctant hobbit, embarks on an unexpected journey with a group of dwarves to reclaim their homeland from the dragon Smaug. Along the way, he discovers courage, wit, and a mysterious ring."
+    },
+    {
+      "title": "Pride and Prejudice",
+      "author": "Jane Austen",
+      "published_date": "1813-01-28",
+      "genres": ["Romance", "Classic Literature"],
+      "summary": "Elizabeth Bennet navigates issues of class, marriage, and morality in early 19th-century England. Her evolving relationship with the reserved Mr. Darcy challenges her initial judgments and societal expectations.",
+      "embedding_text": "Title: Pride and Prejudice. Author: Jane Austen. Published: 1813-01-28. Genres: Romance, Classic Literature. Summary: Elizabeth Bennet navigates issues of class, marriage, and morality in early 19th-century England. Her evolving relationship with the reserved Mr. Darcy challenges her initial judgments and societal expectations."
+    },
+    {
+      "title": "The Great Gatsby",
+      "author": "F. Scott Fitzgerald",
+      "published_date": "1925-04-10",
+      "genres": ["Tragedy", "Historical Fiction"],
+      "summary": "Narrated by Nick Carraway, the novel portrays the mysterious Jay Gatsby and his obsessive love for Daisy Buchanan. Set during the Jazz Age, it critiques wealth, illusion, and the American Dream.",
+      "embedding_text": "Title: The Great Gatsby. Author: F. Scott Fitzgerald. Published: 1925-04-10. Genres: Tragedy, Historical Fiction. Summary: Narrated by Nick Carraway, the novel portrays the mysterious Jay Gatsby and his obsessive love for Daisy Buchanan. Set during the Jazz Age, it critiques wealth, illusion, and the American Dream."
+    }
+  ]
+}
