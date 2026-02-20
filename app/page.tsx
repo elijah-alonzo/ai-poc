@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useRef } from "react";
 
 type ChatResponse = {
   question: string;
@@ -16,6 +16,15 @@ export default function Home() {
   const [result, setResult] = useState<ChatResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImagePreview(URL.createObjectURL(file));
+    }
+  }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -69,7 +78,7 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="space-y-4">
             <form onSubmit={onSubmit} className="space-y-4">
-              <div className="text-xl font-semibold mb-4">
+              <div className="text-3xl font-semibold mb-4">
                 Community Project Article Generator
               </div>
               <div className="space-y-1">
@@ -164,6 +173,30 @@ export default function Home() {
                 </select>
               </div>
 
+              <div className="space-y-1">
+                <label
+                  htmlFor="projectImage"
+                  className="block text-sm font-medium"
+                >
+                  Project Image
+                </label>
+                <input
+                  id="projectImage"
+                  type="file"
+                  accept="image/*"
+                  ref={fileInputRef}
+                  onChange={handleImageChange}
+                  className="w-full border border-gray-300 px-3 py-2 text-sm text-black rounded-sm focus:outline-none focus:border-black file:mr-3 file:py-1 file:px-3 file:rounded-sm file:border-0 file:text-sm file:bg-black file:text-white hover:file:bg-neutral-800 cursor-pointer"
+                />
+                {imagePreview && (
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="mt-2 w-full max-h-48 object-cover rounded-sm border border-gray-300"
+                  />
+                )}
+              </div>
+
               <button
                 type="submit"
                 className="w-full bg-black text-white py-2 px-4 rounded-sm hover:bg-neutral-800 transition-colors disabled:opacity-50"
@@ -174,18 +207,33 @@ export default function Home() {
             </form>
           </div>
           <div className="space-y-2">
-            <div className="text-xl font-semibold">Generated Article</div>
-            <div className="border border-gray-300 rounded-sm p-4 text-sm whitespace-pre-wrap min-h-[460px]">
-              {isLoading ? (
-                <div className="text-gray-500">Generating article...</div>
-              ) : result ? (
-                <div className="leading-relaxed">{result.answer}</div>
-              ) : (
-                <div className="text-gray-400">
-                  Complete the form and click "Generate Article" to create a
-                  comprehensive article about your community project.
-                </div>
+            <div className="border border-gray-300 rounded-sm text-sm min-h-[460px]">
+              {imagePreview && (
+                <img
+                  src={imagePreview}
+                  alt="Project"
+                  className="w-full max-h-64 object-cover rounded-t-sm"
+                />
               )}
+              <div className="p-4 whitespace-pre-wrap">
+                {isLoading ? (
+                  <div className="text-gray-500">Generating article...</div>
+                ) : result ? (
+                  <div className="leading-relaxed">
+                    {projectTitle && (
+                      <h1 className="text-2xl font-bold mb-4 text-center">
+                        {projectTitle}
+                      </h1>
+                    )}
+                    <p className="text-justify">{result.answer}</p>
+                  </div>
+                ) : (
+                  <div className="text-gray-400">
+                    Complete the form and click "Generate Article" to create a
+                    comprehensive article about your community project.
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

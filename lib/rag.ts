@@ -32,25 +32,22 @@ export async function generateArticle(fields: ProjectFields): Promise<string> {
           content: `You are a professional article writer specializing in community project documentation. Generate a complete, well-structured article based on the provided project information.
 
 Article Structure Required:
-1. **Title** - Create an engaging title for the project
-2. **Introduction** - Opening paragraph introducing the project and its significance
-3. **Body Paragraphs** - Develop the project details, objectives, and impact
-4. **Conclusion** - Summarize the project's importance and outcomes
+1. **Introduction** - Opening paragraph introducing the project and its significance
 
 Writing Style:
 - Professional and objective tone
 - Clear, engaging paragraphs
 - No bullet points or lists
+- Remove section headers and the subheading, just write the article content
 - Focus on community impact and project significance
 - Use the provided project details as the foundation
 
-Generate a complete article (400-600 words) with proper paragraph structure.`,
+Generate a complete article (100 words) with proper paragraph structure.`,
         },
         {
           role: "user",
           content: `Generate a complete article for this community project:
-
-Project Title: ${fields.projectTitle}
+          
 Date: ${fields.projectDate}
 Organized by: ${fields.club}
 Project Category: ${fields.projectCategory}
