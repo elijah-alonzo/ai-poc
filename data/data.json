@@ -1,44 +1,28 @@
 {
-  "books": [
+  "projects": [
     {
-      "title": "1984",
-      "author": "George Orwell",
-      "published_date": "1949-06-08",
-      "genres": ["Dystopian", "Political Fiction", "Science Fiction"],
-      "summary": "A dystopian novel set in a totalitarian society ruled by Big Brother. The story follows Winston Smith, who secretly rebels against a regime that manipulates truth, language, and history to maintain absolute control.",
-      "embedding_text": "Title: 1984. Author: George Orwell. Published: 1949-06-08. Genres: Dystopian, Political Fiction, Science Fiction. Summary: A dystopian novel set in a totalitarian society ruled by Big Brother. The story follows Winston Smith, who secretly rebels against a regime that manipulates truth, language, and history to maintain absolute control."
+      "id": "project-1771574253968-p7xggniu5",
+      "timestamp": "2026-02-20T07:57:33.968Z",
+      "fields": {
+        "projectTitle": "Blood Donation Drive",
+        "projectDate": "January 16, 2024",
+        "club": "Rotaract Club of Quezon City",
+        "projectCategory": "Community",
+        "areaOfFocus": "Basic Education and Literacy"
+      },
+      "generated_article": "**\"Saving Lives, One Pint at a Time: A Heartwarming Blood Donation Drive by Rotaract Club of Quezon City\"**\n\nJanuary 20, 2024 marked a significant day for the community as the Rotaract Club of Quezon City launched its Blood Donation Drive, aimed at collecting much-needed blood units for local hospitals and blood banks. The event, which took place on January 16, 2024, was a resounding success, with over 200 individuals rolling up their sleeves to donate blood and help those in need. In this article, we will delve into the objectives, impact, and significance of this community-driven initiative.\n\nThe Rotaract Club of Quezon City, a dynamic group of young professionals and students, has been at the forefront of various community projects, focusing on basic education and literacy. This blood donation drive was a testament to their commitment to giving back to the community and making a tangible difference in the lives of others. The club's president, Maria Rodriguez, emphasized the importance of blood donation in saving lives, stating, \"Every pint of blood donated has the potential to save up to three lives. This drive is a vital step towards ensuring that our hospitals and blood banks have a stable supply of blood for patients in need.\"\n\nThe Blood Donation Drive was carefully planned and executed, with a team of dedicated volunteers from the Rotaract Club of Quezon City working tirelessly to coordinate the event. On the day of the drive, a team of experienced medical professionals from local hospitals was on hand to conduct the blood screenings and donations. The venue was equipped with comfortable seating, refreshments, and entertainment, making the experience as pleasant as possible for donors. In addition, the club had partnered with local schools to spread awareness about the importance of blood donation and the impact it can have on the community.\n\nThe impact of this blood donation drive was palpable, with over 200 units of blood collected, which will be distributed to local hospitals and blood banks. This contribution will significantly help in meeting the demand for blood in the region, particularly for patients undergoing surgeries, cancer treatment, and other medical procedures. Furthermore, the drive helped to raise awareness about the need for regular blood donations and the importance of maintaining a stable blood supply. By doing so, the Rotaract Club of Quezon City has not only made a tangible difference in the lives of others but has also inspired a sense of social responsibility among its members and the community at large.\n\nIn conclusion, the Blood Donation Drive organized by the Rotaract Club of Quezon City was a resounding success, showcasing the club's commitment to community service and social responsibility. The event not only collected much-needed blood units but also raised awareness about the importance of blood donation and the need for a stable blood supply. As the club continues to drive positive change in the community, its members and supporters can take pride in knowing that their efforts are making a tangible difference in the lives of others."
     },
     {
-      "title": "To Kill a Mockingbird",
-      "author": "Harper Lee",
-      "published_date": "1960-07-11",
-      "genres": ["Southern Gothic", "Bildungsroman"],
-      "summary": "Set in the American South, the novel explores racial injustice through the eyes of Scout Finch. Her father, Atticus Finch, defends a Black man falsely accused of assault, exposing deep-rooted prejudice in their community.",
-      "embedding_text": "Title: To Kill a Mockingbird. Author: Harper Lee. Published: 1960-07-11. Genres: Southern Gothic, Bildungsroman. Summary: Set in the American South, the novel explores racial injustice through the eyes of Scout Finch. Her father, Atticus Finch, defends a Black man falsely accused of assault, exposing deep-rooted prejudice in their community."
-    },
-    {
-      "title": "The Hobbit",
-      "author": "J.R.R. Tolkien",
-      "published_date": "1937-09-21",
-      "genres": ["Fantasy", "Adventure"],
-      "summary": "Bilbo Baggins, a reluctant hobbit, embarks on an unexpected journey with a group of dwarves to reclaim their homeland from the dragon Smaug. Along the way, he discovers courage, wit, and a mysterious ring.",
-      "embedding_text": "Title: The Hobbit. Author: J.R.R. Tolkien. Published: 1937-09-21. Genres: Fantasy, Adventure. Summary: Bilbo Baggins, a reluctant hobbit, embarks on an unexpected journey with a group of dwarves to reclaim their homeland from the dragon Smaug. Along the way, he discovers courage, wit, and a mysterious ring."
-    },
-    {
-      "title": "Pride and Prejudice",
-      "author": "Jane Austen",
-      "published_date": "1813-01-28",
-      "genres": ["Romance", "Classic Literature"],
-      "summary": "Elizabeth Bennet navigates issues of class, marriage, and morality in early 19th-century England. Her evolving relationship with the reserved Mr. Darcy challenges her initial judgments and societal expectations.",
-      "embedding_text": "Title: Pride and Prejudice. Author: Jane Austen. Published: 1813-01-28. Genres: Romance, Classic Literature. Summary: Elizabeth Bennet navigates issues of class, marriage, and morality in early 19th-century England. Her evolving relationship with the reserved Mr. Darcy challenges her initial judgments and societal expectations."
-    },
-    {
-      "title": "The Great Gatsby",
-      "author": "F. Scott Fitzgerald",
-      "published_date": "1925-04-10",
-      "genres": ["Tragedy", "Historical Fiction"],
-      "summary": "Narrated by Nick Carraway, the novel portrays the mysterious Jay Gatsby and his obsessive love for Daisy Buchanan. Set during the Jazz Age, it critiques wealth, illusion, and the American Dream.",
-      "embedding_text": "Title: The Great Gatsby. Author: F. Scott Fitzgerald. Published: 1925-04-10. Genres: Tragedy, Historical Fiction. Summary: Narrated by Nick Carraway, the novel portrays the mysterious Jay Gatsby and his obsessive love for Daisy Buchanan. Set during the Jazz Age, it critiques wealth, illusion, and the American Dream."
+      "id": "project-1771574318416-1g4lfgl3k",
+      "timestamp": "2026-02-20T07:58:38.416Z",
+      "fields": {
+        "projectTitle": "Tree Planting",
+        "projectDate": "January 16, 2024",
+        "club": "Rotaract Club of Quezon City",
+        "projectCategory": "Community",
+        "areaOfFocus": "Basic Education and Literacy"
+      },
+      "generated_article": "**Empowering the Future Through Tree Planting: A Community Initiative by the Rotaract Club of Quezon City**\n\nJanuary 16, 2024, marked a significant day for the residents of Quezon City as the Rotaract Club of Quezon City launched a unique community project aimed at enhancing the lives of the local youth. The project, aptly titled Tree Planting, was conceptualized to foster a sense of environmental stewardship, promote basic education, and encourage literacy among the community's young minds.\n\nThe Rotaract Club of Quezon City, a community service organization comprising young professionals and students, has been at the forefront of various community projects aimed at creating a positive impact. With the Tree Planting initiative, the club aimed to not only beautify the local environment but also create a platform for community engagement and education. The project's focus on basic education and literacy was particularly noteworthy, as it addressed the pressing concern of limited access to quality education among the local youth.\n\nOn the day of the event, the Rotaract Club of Quezon City brought together volunteers from various sectors, including students, educators, and local community leaders. Together, they embarked on a mission to plant over 500 trees in a designated area of the city. The event was a resounding success, with participants showcasing their enthusiasm and commitment to the cause. As the trees were being planted, the volunteers were also engaged in a series of educational activities, including environmental awareness sessions and literacy workshops.\n\nThe Tree Planting project was designed to have a lasting impact on the community, with a focus on creating a sustainable environment for the local youth to learn and grow. The project's organizers recognized the importance of trees in promoting environmental balance and providing a natural habitat for local wildlife. By planting trees, the community was not only beautifying its surroundings but also contributing to the preservation of the environment for future generations.\n\nThe project's emphasis on basic education and literacy was equally significant. Through the literacy workshops and educational activities, the volunteers were able to engage the local youth in a series of interactive sessions that promoted a love for reading and learning. The workshops were designed to be fun and engaging, with participants encouraged to participate in activities such as storytelling, poetry recitation, and group discussions.\n\nAs the Rotaract Club of Quezon City's Tree Planting project comes to an end, it is clear that the community has been positively impacted. The project's focus on environmental stewardship, basic education, and literacy has created a lasting legacy that will continue to inspire and motivate the local youth. The Rotaract Club's commitment to community service and education has been demonstrated through this project, and it is hoped that similar initiatives will continue to be launched in the future, further enhancing the lives of the community's residents."
     }
   ]
 }

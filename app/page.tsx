@@ -5,7 +5,6 @@ import { FormEvent, useState } from "react";
 type ChatResponse = {
   question: string;
   answer: string;
-  evidence: string[];
 };
 
 export default function Home() {
@@ -71,7 +70,7 @@ export default function Home() {
           <div className="space-y-4">
             <form onSubmit={onSubmit} className="space-y-4">
               <div className="text-xl font-semibold mb-4">
-                Article Generator Test
+                Community Project Article Generator
               </div>
               <div className="space-y-1">
                 <label
@@ -175,14 +174,17 @@ export default function Home() {
             </form>
           </div>
           <div className="space-y-2">
-            <div className="text-xl font-semibold">Article Generated</div>
+            <div className="text-xl font-semibold">Generated Article</div>
             <div className="border border-gray-300 rounded-sm p-4 text-sm whitespace-pre-wrap min-h-[460px]">
               {isLoading ? (
-                <div className="text-gray-300">Generating article...</div>
+                <div className="text-gray-500">Generating article...</div>
               ) : result ? (
-                <div>{result.answer}</div>
+                <div className="leading-relaxed">{result.answer}</div>
               ) : (
-                <div>Article is displayed here</div>
+                <div className="text-gray-400">
+                  Complete the form and click "Generate Article" to create a
+                  comprehensive article about your community project.
+                </div>
               )}
             </div>
           </div>
