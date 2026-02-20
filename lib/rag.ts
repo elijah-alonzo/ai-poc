@@ -1,263 +1,107 @@
-// ==================rag logic (copy pasted from old proj)================== //
+// ==================Article Generation Logic================== //
 
-import { Index } from "@upstash/vector";
 import Groq from "groq-sdk";
-
-type JsonValue =
-  | string
-  | number
-  | boolean
-  | null
-  | JsonValue[]
-  | { [key: string]: JsonValue };
-
-export type RetrievedChunk = {
-  path: string;
-  text: string;
-  score: number;
-  id: string;
-};
-
-const vector = new Index({
-  url: process.env.UPSTASH_VECTOR_REST_URL!,
-  token: process.env.UPSTASH_VECTOR_REST_TOKEN!,
-});
+import fs from "fs/promises";
+import path from "path";
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY!,
 });
 
-function flattenJson(
-  value: JsonValue,
-  basePath = "",
-): Array<{ path: string; text: string; id: string }> {
-  if (value === null) {
-    return [];
-  }
+export type ProjectFields = {
+  projectTitle: string;
+  projectDate: string;
+  club: string;
+  projectCategory: string;
+  areaOfFocus: string;
+};
 
-  if (
-    typeof value === "string" ||
-    typeof value === "number" ||
-    typeof value === "boolean"
-  ) {
-    const path = basePath || "root";
-    return [
-      {
-        path,
-        text: String(value),
-        id: `${path}-${Date.now()}-${Math.random()}`,
-      },
-    ];
-  }
+export type Project = {
+  id: string;
+  timestamp: string;
+  fields: ProjectFields;
+  generated_article: string;
+};
 
-  if (Array.isArray(value)) {
-    const primitiveValues = value.filter(
-      (item) =>
-        typeof item === "string" ||
-        typeof item === "number" ||
-        typeof item === "boolean",
-    );
-
-    const combined =
-      primitiveValues.length > 0
-        ? [
-            {
-              path: basePath || "root",
-              text: primitiveValues.map(String).join(" | "),
-              id: `${basePath || "root"}-array-${Date.now()}-${Math.random()}`,
-            },
-          ]
-        : [];
-
-    const nested = value.flatMap((item, index) => {
-      if (typeof item === "object" && item !== null) {
-        return flattenJson(item as JsonValue, `${basePath}[${index}]`);
-      }
-      return [];
-    });
-
-    return [...combined, ...nested];
-  }
-
-  return Object.entries(value).flatMap(([key, nestedValue]) => {
-    const nextPath = basePath ? `${basePath}.${key}` : key;
-    return flattenJson(nestedValue, nextPath);
-  });
-}
-
-export async function initializeVectorStore(jsonData: JsonValue) {
-  const chunks = flattenJson(jsonData);
-
-  const vectors = chunks.map((chunk) => ({
-    id: chunk.id,
-    data: `${chunk.path}: ${chunk.text}`,
-    metadata: {
-      path: chunk.path,
-      text: chunk.text,
-    },
-  }));
-
-  await vector.upsert(vectors);
-  return chunks.length;
-}
-
-export async function retrieveRelevant(
-  question: string,
-  limit = 6,
-): Promise<RetrievedChunk[]> {
-  try {
-    const results = await vector.query({
-      data: question,
-      topK: limit,
-      includeMetadata: true,
-    });
-
-    return results.map((result) => ({
-      id: result.id as string,
-      path: result.metadata?.path as string,
-      text: result.metadata?.text as string,
-      score: result.score,
-    }));
-  } catch (error) {
-    console.error("Vector search failed:", error);
-    return [];
-  }
-}
-
-export async function summarizeAnswer(
-  question: string,
-  chunks: RetrievedChunk[],
-): Promise<{
-  answer: string;
-  confidence: "high" | "medium" | "low";
-  evidence: string[];
-}> {
-  if (chunks.length === 0) {
-    return {
-      answer:
-        "I could not find relevant information for that question in the provided profile data. Please ask about experience, skills, projects, salary/location, or interview preparation.",
-      confidence: "low",
-      evidence: [],
-    };
-  }
-
-  const top = chunks.slice(0, 3);
-  const evidence = top.map((chunk) => chunk.path);
-  const context = top.map((chunk) => `${chunk.path}: ${chunk.text}`).join("\n");
-
-  const confidence: "high" | "medium" | "low" =
-    top[0].score >= 0.8 ? "high" : top[0].score >= 0.6 ? "medium" : "low";
-
+export async function generateArticle(fields: ProjectFields): Promise<string> {
   try {
     const completion = await groq.chat.completions.create({
       messages: [
         {
           role: "system",
-          content: `You are an AI assistant helping with career/interview preparation. Answer questions based ONLY on the provided context from a professional profile. Be concise and practical.
+          content: `You are a professional article writer specializing in community project documentation. Generate a complete, well-structured article based on the provided project information.
 
-Rules:
-- Only use information from the provided context
-- If information is missing, say so clearly
-- Focus on interview preparation, achievements, technical skills, and career goals
-- Be direct and actionable`,
+Article Structure Required:
+1. **Title** - Create an engaging title for the project
+2. **Introduction** - Opening paragraph introducing the project and its significance
+3. **Body Paragraphs** - Develop the project details, objectives, and impact
+4. **Conclusion** - Summarize the project's importance and outcomes
+
+Writing Style:
+- Professional and objective tone
+- Clear, engaging paragraphs
+- No bullet points or lists
+- Focus on community impact and project significance
+- Use the provided project details as the foundation
+
+Generate a complete article (400-600 words) with proper paragraph structure.`,
         },
         {
           role: "user",
-          content: `Question: ${question}\n\nContext from profile:\n${context}\n\nAnswer the question based only on the provided context:`,
-        },
-      ],
-      model: "llama-3.1-8b-instant",
-      temperature: 0.1,
-      max_tokens: 500,
-    });
+          content: `Generate a complete article for this community project:
 
-    const answer =
-      completion.choices[0]?.message?.content || "Unable to generate response.";
+Project Title: ${fields.projectTitle}
+Date: ${fields.projectDate}
+Organized by: ${fields.club}
+Project Category: ${fields.projectCategory}
+Area of Focus: ${fields.areaOfFocus}
 
-    return {
-      answer,
-      confidence, // var for testing accuracy
-      evidence, // var for testing sources
-    };
-  } catch (error) {
-    console.error("Groq API error:", error);
-    return {
-      answer: "Error generating response. Please try again.",
-      confidence: "low",
-      evidence,
-    };
-  }
-}
-
-// ==================article generation================== //
-// code taken from a repo i found in github, modified a bit to fit our use case. sorry na lang sa may ari ta di ko nasave yung source link hehe
-
-export async function generateArticle(
-  topic: string,
-  chunks: RetrievedChunk[],
-): Promise<{
-  answer: string;
-  confidence: "high" | "medium" | "low";
-  evidence: string[];
-}> {
-  const top = chunks.slice(0, 3);
-
-  const evidence = top.map((chunk) => chunk.path);
-
-  const context =
-    chunks.length > 0
-      ? top.map((chunk) => `${chunk.path}: ${chunk.text}`).join("\n")
-      : "No specific context available.";
-
-  // confidence calcu for testing remove after demo
-  const confidence: "high" | "medium" | "low" =
-    chunks.length === 0
-      ? "low"
-      : top[0].score >= 0.8
-        ? "high" // goods
-        : top[0].score >= 0.6
-          ? "medium" // saks lang
-          : "low"; // aray mo
-
-  try {
-    const completion = await groq.chat.completions.create({
-      messages: [
-        {
-          // configure ai response and personality here
-          role: "system",
-          content: `You are tasked to create an introductory paragraph for an article. Ang should follow this format. You can expand it a bit to make the paragraph longer and more engaging.:
-
-"The (Club) initiated the (Project name), a (Project category) that aims to (Area of Focus) on (Date), in (Location)."
-
-Replace the placeholders with the actual user input. After the introduction, continue the article as instructed, using a straight-to-the-point, objective, and simple style. Do not use bullets or lists. Use full paragraphs only. If context is provided, use it as additional reference when relevant.${chunks.length > 0 ? "\n- Use the provided context as additional reference when relevant" : ""}`,
-        },
-        {
-          role: "user",
-          content:
-            chunks.length > 0
-              ? `Please write a comprehensive and short introduction for an article based on the following project information:\n\n${topic}\n\nAdditional context from database:\n${context}\n\nGenerate a detailed, well-structured, single paragraph. introduction.`
-              : `Please write a comprehensive  and short introduction for an article based on the following project information:\n\n${topic}\n\nGenerate a detailed, well-structured, single paragraph. introduction.`,
+Create a comprehensive article with title, introduction, body paragraphs, and conclusion.`,
         },
       ],
       model: "llama-3.1-8b-instant",
       temperature: 0.7,
-      max_tokens: 800, // rate kung gaano kabobo yung ai
+      max_tokens: 1000,
     });
 
-    const answer =
+    const article =
       completion.choices[0]?.message?.content || "Unable to generate article.";
-
-    return {
-      answer,
-      confidence,
-      evidence,
-    };
+    return article;
   } catch (error) {
     console.error("Groq API error:", error);
-    return {
-      answer: "Error generating article. Please try again.",
-      confidence: "low",
-      evidence,
-    };
+    return "Error generating article. Please try again.";
+  }
+}
+
+export async function saveProject(
+  fields: ProjectFields,
+  article: string,
+): Promise<void> {
+  const dataPath = path.join(process.cwd(), "data", "data.json");
+
+  const project: Project = {
+    id: `project-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    timestamp: new Date().toISOString(),
+    fields,
+    generated_article: article,
+  };
+
+  try {
+    let projects: Project[] = [];
+
+    try {
+      const fileContent = await fs.readFile(dataPath, "utf-8");
+      const data = JSON.parse(fileContent);
+      projects = data.projects || [];
+    } catch {
+      // File doesn't exist or is invalid, start with empty array
+    }
+
+    projects.push(project);
+
+    await fs.writeFile(dataPath, JSON.stringify({ projects }, null, 2));
+  } catch (error) {
+    console.error("Error saving project:", error);
+    throw error;
   }
 }

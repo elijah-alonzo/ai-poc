@@ -1,15 +1,9 @@
 /**
- * - API endpoint na nagrerecieve ng form submissions sa frontend
+ * API endpoint that receives form submissions and generates articles
  */
 
-import data from "@/data/data.json";
-import {
-  initializeVectorStore,
-  retrieveRelevant,
-  generateArticle,
-} from "@/lib/rag";
+import { generateArticle, saveProject, type ProjectFields } from "@/lib/rag";
 
-// ==================recieve user input sect================== //
 type ChatRequest = {
   projectTitle?: string;
   projectDate?: string;
@@ -17,9 +11,6 @@ type ChatRequest = {
   projectCategory?: string;
   areaOfFocus?: string;
 };
-
-// ==================init vector db pag start ng server================== //
-let isInitialized = false;
 
 export async function POST(request: Request) {
   let payload: ChatRequest;
@@ -30,7 +21,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "Invalid JSON body." }, { status: 400 });
   }
 
-  // ==================embed user input sect================== //
+  // Extract and validate user input
   const projectTitle = payload.projectTitle?.trim() || "";
   const projectDate = payload.projectDate?.trim() || "";
   const club = payload.club?.trim() || "";
@@ -50,60 +41,28 @@ export async function POST(request: Request) {
     );
   }
 
-  const structuredPrompt = buildPromptFromFields({
+  const fields: ProjectFields = {
     projectTitle,
     projectDate,
     club,
     projectCategory,
     areaOfFocus,
-  });
+  };
 
-  // check db
   try {
-    if (!isInitialized) {
-      await initializeVectorStore(data);
-      isInitialized = true;
-    }
+    // Generate article based solely on user input
+    const article = await generateArticle(fields);
 
-    const matches = await retrieveRelevant(structuredPrompt, 3); // search
-    const result = await generateArticle(structuredPrompt, matches); // generate
+    // Save project to data.json
+    await saveProject(fields, article);
 
-    // return to ui
+    // Return generated article
     return Response.json({
-      question: structuredPrompt,
-      answer: result.answer,
-      evidence: result.evidence, //  note to self: remove this after demo.
-      matches,
+      question: `Project: ${projectTitle || "Untitled"}`,
+      answer: article,
     });
   } catch (error) {
-    console.error("Chat API error:", error);
+    console.error("Article generation error:", error);
     return Response.json({ error: "Internal server error" }, { status: 500 });
   }
-}
-
-// ==================fix retrieved data for ui================== //
-function buildPromptFromFields(fields: {
-  projectTitle: string;
-  projectDate: string;
-  club: string;
-  projectCategory: string;
-  areaOfFocus: string;
-}): string {
-  const parts: string[] = [];
-  if (fields.projectTitle) {
-    parts.push(`Project Title: ${fields.projectTitle}`);
-  }
-  if (fields.projectDate) {
-    parts.push(`Date: ${fields.projectDate}`);
-  }
-  if (fields.club) {
-    parts.push(`Organized by: ${fields.club}`);
-  }
-  if (fields.projectCategory) {
-    parts.push(`Project Category: ${fields.projectCategory}`);
-  }
-  if (fields.areaOfFocus) {
-    parts.push(`Area of Focus: ${fields.areaOfFocus}`);
-  }
-  return parts.join("\n\n");
 }
