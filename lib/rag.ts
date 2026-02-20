@@ -225,31 +225,18 @@ export async function generateArticle(
         {
           // configure ai response and personality here
           role: "system",
-          content: `You are an expert article writer specializing in project narratives. Generate complete, well-structured articles based on the project information provided. Each article must include:
+          content: `You are tasked to create an introductory paragraph for an article. Ang should follow this format. You can expand it a bit to make the paragraph longer and more engaging.:
 
-- A clear, compelling title that captures the essence of the project
-- An engaging introduction that provides context and sets the stage
-- Multiple well-developed body paragraphs that:
-  * Describe the project's goals and objectives
-  * Explain the activities and methods used
-  * Highlight key outcomes and achievements
-  * Discuss the impact and significance
-- A thoughtful conclusion that summarizes key points and offers final insights
+"The (Club) initiated the (Project name), a (Project category) that aims to (Area of Focus) on (Date), in (Location)."
 
-Style requirements:
-- Use a professional yet engaging narrative tone
-- Write clearly and make the content accessible
-- Expand on all provided details with relevant elaboration
-- Ensure logical flow and organization
-- No bullets or lists, write in full paragraphs. Make it read like a story.
-- Create a cohesive story that brings the project to life${chunks.length > 0 ? "\n- Use the provided context as additional reference when relevant" : ""}`,
+Replace the placeholders with the actual user input. After the introduction, continue the article as instructed, using a straight-to-the-point, objective, and simple style. Do not use bullets or lists. Use full paragraphs only. If context is provided, use it as additional reference when relevant.${chunks.length > 0 ? "\n- Use the provided context as additional reference when relevant" : ""}`,
         },
         {
           role: "user",
           content:
             chunks.length > 0
-              ? `Please write a comprehensive narrative article based on the following project information:\n\n${topic}\n\nAdditional context from database:\n${context}\n\nGenerate a detailed, well-structured article that tells the complete story of this project.`
-              : `Please write a comprehensive narrative article based on the following project information:\n\n${topic}\n\nGenerate a detailed, well-structured article that tells the complete story of this project.`,
+              ? `Please write a comprehensive and short introduction for an article based on the following project information:\n\n${topic}\n\nAdditional context from database:\n${context}\n\nGenerate a detailed, well-structured, single paragraph. introduction.`
+              : `Please write a comprehensive  and short introduction for an article based on the following project information:\n\n${topic}\n\nGenerate a detailed, well-structured, single paragraph. introduction.`,
         },
       ],
       model: "llama-3.1-8b-instant",
