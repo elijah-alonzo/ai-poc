@@ -14,7 +14,8 @@ type ChatRequest = {
   projectTitle?: string;
   projectDate?: string;
   club?: string;
-  narrative?: string;
+  projectCategory?: string;
+  areaOfFocus?: string;
 };
 
 // ==================init vector db pag start ng server================== //
@@ -33,22 +34,28 @@ export async function POST(request: Request) {
   const projectTitle = payload.projectTitle?.trim() || "";
   const projectDate = payload.projectDate?.trim() || "";
   const club = payload.club?.trim() || "";
-  const narrative = payload.narrative?.trim() || "";
+  const projectCategory = payload.projectCategory?.trim() || "";
+  const areaOfFocus = payload.areaOfFocus?.trim() || "";
 
-  // check
-  if (!projectTitle && !projectDate && !club && !narrative) {
+  if (
+    !projectTitle &&
+    !projectDate &&
+    !club &&
+    !projectCategory &&
+    !areaOfFocus
+  ) {
     return Response.json(
       { error: "At least one field is required." },
       { status: 400 },
     );
   }
 
-  // combine
   const structuredPrompt = buildPromptFromFields({
     projectTitle,
     projectDate,
     club,
-    narrative,
+    projectCategory,
+    areaOfFocus,
   });
 
   // check db
@@ -79,10 +86,10 @@ function buildPromptFromFields(fields: {
   projectTitle: string;
   projectDate: string;
   club: string;
-  narrative: string;
+  projectCategory: string;
+  areaOfFocus: string;
 }): string {
   const parts: string[] = [];
-
   if (fields.projectTitle) {
     parts.push(`Project Title: ${fields.projectTitle}`);
   }
@@ -92,9 +99,11 @@ function buildPromptFromFields(fields: {
   if (fields.club) {
     parts.push(`Organized by: ${fields.club}`);
   }
-  if (fields.narrative) {
-    parts.push(`Project Details: ${fields.narrative}`);
+  if (fields.projectCategory) {
+    parts.push(`Project Category: ${fields.projectCategory}`);
   }
-
+  if (fields.areaOfFocus) {
+    parts.push(`Area of Focus: ${fields.areaOfFocus}`);
+  }
   return parts.join("\n\n");
 }

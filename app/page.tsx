@@ -12,7 +12,8 @@ export default function Home() {
   const [projectTitle, setProjectTitle] = useState("");
   const [projectDate, setProjectDate] = useState("");
   const [club, setClub] = useState("");
-  const [narrative, setNarrative] = useState("");
+  const [projectCategory, setProjectCategory] = useState("");
+  const [areaOfFocus, setAreaOfFocus] = useState("");
   const [result, setResult] = useState<ChatResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +27,8 @@ export default function Home() {
       !projectTitle.trim() &&
       !projectDate.trim() &&
       !club.trim() &&
-      !narrative.trim()
+      !projectCategory.trim() &&
+      !areaOfFocus.trim()
     ) {
       setError("Please fill in at least one field.");
       return;
@@ -42,7 +44,8 @@ export default function Home() {
           projectTitle: projectTitle.trim(),
           projectDate: projectDate.trim(),
           club: club.trim(),
-          narrative: narrative.trim(),
+          projectCategory: projectCategory.trim(),
+          areaOfFocus: areaOfFocus.trim(),
         }),
       });
 
@@ -82,7 +85,7 @@ export default function Home() {
                   type="text"
                   value={projectTitle}
                   onChange={(e) => setProjectTitle(e.target.value)}
-                  className="w-full border border-gray-300 px-3 py-2 text-sm text-black focus:outline-none focus:border-blue-500"
+                  className="w-full border border-gray-300 px-3 py-2 text-sm text-black rounded-sm focus:outline-none focus:border-black"
                 />
               </div>
               <div className="space-y-1">
@@ -97,7 +100,7 @@ export default function Home() {
                   type="text"
                   value={projectDate}
                   onChange={(e) => setProjectDate(e.target.value)}
-                  className="w-full border border-gray-300 px-3 py-2 text-sm text-black focus:outline-none focus:border-blue-500"
+                  className="w-full border border-gray-300 px-3 py-2 text-sm text-black rounded-sm focus:outline-none focus:border-black"
                 />
               </div>
               <div className="space-y-1">
@@ -109,43 +112,77 @@ export default function Home() {
                   type="text"
                   value={club}
                   onChange={(e) => setClub(e.target.value)}
-                  className="w-full border border-gray-300 px-3 py-2 text-sm text-black focus:outline-none focus:border-blue-500"
+                  className="w-full border border-gray-300 px-3 py-2 text-sm text-black rounded-sm focus:outline-none focus:border-black"
                 />
               </div>
+              {/* Field #4: Project Category - Dropdown */}
               <div className="space-y-1">
                 <label
-                  htmlFor="narrative"
+                  htmlFor="projectCategory"
                   className="block text-sm font-medium"
                 >
-                  Project Narrative
+                  Project Category
                 </label>
-                <textarea
-                  id="narrative"
-                  value={narrative}
-                  onChange={(e) => setNarrative(e.target.value)}
-                  rows={6}
-                  className="w-full border border-gray-300 px-3 py-2 text-sm text-black focus:outline-none focus:border-blue-500 resize-vertical"
-                />
+                <select
+                  id="projectCategory"
+                  value={projectCategory}
+                  onChange={(e) => setProjectCategory(e.target.value)}
+                  className="w-full border border-gray-300 px-3 py-2 text-sm text-black rounded-sm focus:outline-none focus:border-black"
+                >
+                  <option value="">Select category...</option>
+                  <option value="Community">Community</option>
+                  <option value="International">International</option>
+                  <option value="Vocational">Vocational</option>
+                  <option value="Youth">Youth</option>
+                </select>
               </div>
+
+              {/* Field #5: Area of Focus - Dropdown */}
+              <div className="space-y-1">
+                <label
+                  htmlFor="areaOfFocus"
+                  className="block text-sm font-medium"
+                >
+                  Area of Focus
+                </label>
+                <select
+                  id="areaOfFocus"
+                  value={areaOfFocus}
+                  onChange={(e) => setAreaOfFocus(e.target.value)}
+                  className="w-full border border-gray-300 px-3 py-2 text-sm text-black rounded-sm focus:outline-none focus:border-black"
+                >
+                  <option value="">Select area of focus...</option>
+                  <option value="Basic Education and Literacy">
+                    Basic Education and Literacy
+                  </option>
+                  <option value="Environment">Environment</option>
+                  <option value="Maternal and Child Health">
+                    Maternal and Child Health
+                  </option>
+                  <option value="Peace Building and Conflict Prevention">
+                    Peace Building and Conflict Prevention
+                  </option>
+                </select>
+              </div>
+
               <button
                 type="submit"
+                className="w-full bg-black text-white py-2 px-4 rounded-sm hover:bg-neutral-800 transition-colors disabled:opacity-50"
                 disabled={isLoading}
-                className="w-full border px-4 py-2 text-sm disabled:opacity-50 bg-black text-white transition-colors duration-200 hover:border-gray-700 disabled:hover:border-gray-300 disabled:hover:bg-transparent"
               >
-                {isLoading ? "Generating Article..." : "Generate Article"}
+                {isLoading ? "Generating..." : "Generate Article"}
               </button>
             </form>
-            {error && <div className="text-sm text-red-600">{error}</div>}
           </div>
           <div className="space-y-2">
             <div className="text-xl font-semibold">Article Generated</div>
-            <div className="border border-gray-300 p-4 text-sm whitespace-pre-wrap min-h-[460px]">
+            <div className="border border-gray-300 rounded-sm p-4 text-sm whitespace-pre-wrap min-h-[460px]">
               {isLoading ? (
                 <div className="text-gray-300">Generating article...</div>
               ) : result ? (
                 <div>{result.answer}</div>
               ) : (
-                <div className="text-gray-300">Article is displayed here</div>
+                <div>Article is displayed here</div>
               )}
             </div>
           </div>
