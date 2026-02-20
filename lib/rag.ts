@@ -1,3 +1,5 @@
+// ==================rag logic (copy pasted from old proj)================== //
+
 import { Index } from "@upstash/vector";
 import Groq from "groq-sdk";
 
@@ -83,11 +85,9 @@ function flattenJson(
   });
 }
 
-// Initialize vector store with data
 export async function initializeVectorStore(jsonData: JsonValue) {
   const chunks = flattenJson(jsonData);
 
-  // Upsert chunks to vector store
   const vectors = chunks.map((chunk) => ({
     id: chunk.id,
     data: `${chunk.path}: ${chunk.text}`,
@@ -176,13 +176,99 @@ Rules:
 
     return {
       answer,
+      confidence, // var for testing accuracy
+      evidence, // var for testing sources
+    };
+  } catch (error) {
+    console.error("Groq API error:", error);
+    return {
+      answer: "Error generating response. Please try again.",
+      confidence: "low",
+      evidence,
+    };
+  }
+}
+
+// ==================article generation================== //
+// code taken from a repo i found in github, modified a bit to fit our use case. sorry na lang sa may ari ta di ko nasave yung source link hehe
+
+export async function generateArticle(
+  topic: string,
+  chunks: RetrievedChunk[],
+): Promise<{
+  answer: string;
+  confidence: "high" | "medium" | "low";
+  evidence: string[];
+}> {
+  const top = chunks.slice(0, 3);
+
+  const evidence = top.map((chunk) => chunk.path);
+
+  const context =
+    chunks.length > 0
+      ? top.map((chunk) => `${chunk.path}: ${chunk.text}`).join("\n")
+      : "No specific context available.";
+
+  // confidence calcu for testing remove after demo
+  const confidence: "high" | "medium" | "low" =
+    chunks.length === 0
+      ? "low"
+      : top[0].score >= 0.8
+        ? "high" // goods
+        : top[0].score >= 0.6
+          ? "medium" // saks lang
+          : "low"; // aray mo
+
+  try {
+    const completion = await groq.chat.completions.create({
+      messages: [
+        {
+          // configure ai response and personality here
+          role: "system",
+          content: `You are an expert article writer specializing in project narratives. Generate complete, well-structured articles based on the project information provided. Each article must include:
+
+- A clear, compelling title that captures the essence of the project
+- An engaging introduction that provides context and sets the stage
+- Multiple well-developed body paragraphs that:
+  * Describe the project's goals and objectives
+  * Explain the activities and methods used
+  * Highlight key outcomes and achievements
+  * Discuss the impact and significance
+- A thoughtful conclusion that summarizes key points and offers final insights
+
+Style requirements:
+- Use a professional yet engaging narrative tone
+- Write clearly and make the content accessible
+- Expand on all provided details with relevant elaboration
+- Ensure logical flow and organization
+- No bullets or lists, write in full paragraphs. Make it read like a story.
+- Create a cohesive story that brings the project to life${chunks.length > 0 ? "\n- Use the provided context as additional reference when relevant" : ""}`,
+        },
+        {
+          role: "user",
+          content:
+            chunks.length > 0
+              ? `Please write a comprehensive narrative article based on the following project information:\n\n${topic}\n\nAdditional context from database:\n${context}\n\nGenerate a detailed, well-structured article that tells the complete story of this project.`
+              : `Please write a comprehensive narrative article based on the following project information:\n\n${topic}\n\nGenerate a detailed, well-structured article that tells the complete story of this project.`,
+        },
+      ],
+      model: "llama-3.1-8b-instant",
+      temperature: 0.7,
+      max_tokens: 800, // rate kung gaano kabobo yung ai
+    });
+
+    const answer =
+      completion.choices[0]?.message?.content || "Unable to generate article.";
+
+    return {
+      answer,
       confidence,
       evidence,
     };
   } catch (error) {
     console.error("Groq API error:", error);
     return {
-      answer: "Error generating response. Please try again.",
+      answer: "Error generating article. Please try again.",
       confidence: "low",
       evidence,
     };
