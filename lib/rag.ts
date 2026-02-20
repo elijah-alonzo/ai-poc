@@ -189,6 +189,19 @@ Rules:
   }
 }
 
+/**
+ * Generates a comprehensive narrative article based on project information
+ *
+ * @param topic - Structured prompt containing project details (title, date, club, narrative)
+ * @param chunks - Related content retrieved from the vector database via semantic search
+ * @returns Object containing the generated article, confidence level, and evidence sources
+ *
+ * How it works:
+ * 1. Takes the structured prompt (with all project fields combined)
+ * 2. Retrieves relevant context from the vector database (if available)
+ * 3. Sends both to the AI model (Groq with Llama 3.1)
+ * 4. AI generates a full article with title, introduction, body, and conclusion
+ */
 export async function generateArticle(
   topic: string,
   chunks: RetrievedChunk[],
@@ -197,49 +210,81 @@ export async function generateArticle(
   confidence: "high" | "medium" | "low";
   evidence: string[];
 }> {
+  // Select top 3 most relevant chunks from vector search
   const top = chunks.slice(0, 3);
-  const evidence = top.map((chunk) => chunk.path);
-  const context = chunks.length > 0 
-    ? top.map((chunk) => `${chunk.path}: ${chunk.text}`).join("\n")
-    : "No specific context available.";
 
+  // Extract the paths/sources of the evidence for reference
+  const evidence = top.map((chunk) => chunk.path);
+
+  // Combine the retrieved chunks into a context string
+  // This provides additional background information to the AI
+  const context =
+    chunks.length > 0
+      ? top.map((chunk) => `${chunk.path}: ${chunk.text}`).join("\n")
+      : "No specific context available.";
+
+  // Calculate confidence level based on semantic similarity scores
+  // Higher scores mean the vector DB found more relevant information
   const confidence: "high" | "medium" | "low" =
-    chunks.length === 0 ? "low" : top[0].score >= 0.8 ? "high" : top[0].score >= 0.6 ? "medium" : "low";
+    chunks.length === 0
+      ? "low"
+      : top[0].score >= 0.8
+        ? "high"
+        : top[0].score >= 0.6
+          ? "medium"
+          : "low";
 
   try {
+    // Call the Groq API to generate the article
     const completion = await groq.chat.completions.create({
       messages: [
         {
+          // System message: Defines the AI's role and guidelines
           role: "system",
-          content: `You are an expert article writer. Generate complete, well-structured articles on the given topic. Each article must include:
-- A clear, relevant title
-- An introduction with context and background
-- Multiple body paragraphs with detailed explanations and examples
-- A conclusion summarizing key points
+          content: `You are an expert article writer specializing in project narratives. Generate complete, well-structured articles based on the project information provided. Each article must include:
 
-Use a professional and informative tone. Write clearly and expand on topics with relevant information. Ensure the article is coherent and logically organized.${chunks.length > 0 ? " Use the provided context as reference when relevant, but expand beyond it to create a comprehensive article." : ""}`,
+- A clear, compelling title that captures the essence of the project
+- An engaging introduction that provides context and sets the stage
+- Multiple well-developed body paragraphs that:
+  * Describe the project's goals and objectives
+  * Explain the activities and methods used
+  * Highlight key outcomes and achievements
+  * Discuss the impact and significance
+- A thoughtful conclusion that summarizes key points and offers final insights
+
+Style requirements:
+- Use a professional yet engaging narrative tone
+- Write clearly and make the content accessible
+- Expand on all provided details with relevant elaboration
+- Ensure logical flow and organization
+- Create a cohesive story that brings the project to life${chunks.length > 0 ? "\n- Use the provided context as additional reference when relevant" : ""}`,
         },
         {
+          // User message: Contains the actual project information to write about
           role: "user",
-          content: chunks.length > 0 
-            ? `Topic: ${topic}\n\nRelevant context:\n${context}\n\nWrite a detailed, well-structured article about this topic.`
-            : `Topic: ${topic}\n\nWrite a detailed, well-structured article about this topic.`,
+          content:
+            chunks.length > 0
+              ? `Please write a comprehensive narrative article based on the following project information:\n\n${topic}\n\nAdditional context from database:\n${context}\n\nGenerate a detailed, well-structured article that tells the complete story of this project.`
+              : `Please write a comprehensive narrative article based on the following project information:\n\n${topic}\n\nGenerate a detailed, well-structured article that tells the complete story of this project.`,
         },
       ],
-      model: "llama-3.1-8b-instant",
-      temperature: 0.7,
-      max_tokens: 1200,
+      model: "llama-3.1-8b-instant", // The AI model to use
+      temperature: 0.7, // Controls creativity (0 = deterministic, 1 = very creative)
+      max_tokens: 1200, // Maximum length of the generated article
     });
 
+    // Extract the generated article from the API response
     const answer =
       completion.choices[0]?.message?.content || "Unable to generate article.";
 
+    // Return the article along with metadata
     return {
-      answer,
-      confidence,
-      evidence,
+      answer, // The generated article text
+      confidence, // How confident we are in the relevance
+      evidence, // Sources used from the database
     };
   } catch (error) {
+    // Handle any errors that occur during article generation
     console.error("Groq API error:", error);
     return {
       answer: "Error generating article. Please try again.",
