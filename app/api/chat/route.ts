@@ -61,8 +61,14 @@ export async function POST(request: Request) {
       question: `Project: ${projectTitle || "Untitled"}`,
       answer: article,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Article generation error:", error);
-    return Response.json({ error: "Internal server error" }, { status: 500 });
+    // Return the specific error message instead of generic "Internal server error"
+    return Response.json(
+      {
+        error: error.message || "Failed to generate article",
+      },
+      { status: 500 },
+    );
   }
 }
