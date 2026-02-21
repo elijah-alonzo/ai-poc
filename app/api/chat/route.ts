@@ -2,11 +2,7 @@
  * API endpoint that receives form submissions and generates articles
  */
 
-import {
-  generateArticle,
-  saveProject,
-  type ProjectFields,
-} from "@/lib/temp-rag";
+import { generateArticle, saveProject, type ProjectFields } from "@/lib/rag";
 
 type ChatRequest = {
   projectTitle?: string;
